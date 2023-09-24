@@ -1,1 +1,3 @@
 rootProject.name = 'fit'
+
+include(":app")
