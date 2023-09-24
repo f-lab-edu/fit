@@ -35,4 +35,57 @@ public class PostTests {
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(200);
     }
+
+    @AutoParameterizedTest
+    void sut_returns_400_status_code_if_email_missed(String password) {
+        // Arrange
+        HashMap<String, String> command = new HashMap<>();
+        command.put("password", password);
+
+        // Act
+        ResponseEntity<Void> response = client.postForEntity(
+                "/api/signup",
+                command,
+                void.class);
+
+        // Assert
+        assertThat(response.getStatusCode().value()).isEqualTo(400);
+    }
+
+    @AutoParameterizedTest
+    void sut_returns_400_status_code_if_password_missed(String localPart) {
+        // Arrange
+        HashMap<String, String> command = new HashMap<>();
+        command.put("email", localPart + "@fit.com");
+
+        // Act
+        ResponseEntity<Void> response = client.postForEntity(
+                "/api/signup",
+                command,
+                void.class);
+
+        // Assert
+        assertThat(response.getStatusCode().value()).isEqualTo(400);
+    }
+
+    @AutoParameterizedTest
+    void sut_returns_400_status_code_if_email_already_exists(
+            String localPart,
+            String password1,
+            String password2
+    ) {
+        String email = localPart + "@fit.com";
+        signup(email, password1);
+
+        ResponseEntity<Void> response = signup(email, password2);
+
+        assertThat(response.getStatusCode().value()).isEqualTo(400);
+    }
+
+    private ResponseEntity<Void> signup(String email, String password) {
+        HashMap<String, String> command1 = new HashMap<>();
+        command1.put("email", email);
+        command1.put("password", password);
+        return client.postForEntity("/api/signup", command1, void.class);
+    }
 }
