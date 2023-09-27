@@ -24,11 +24,7 @@ public class SignupController {
         if (command.email() == null || command.password() == null) {
             return ResponseEntity.badRequest().build();
         } else {
-            try {
-                executor.execute(UUID.randomUUID(), command);
-            } catch(DuplicateEmailException exception) {
-                return ResponseEntity.badRequest().build();
-            }
+            executor.execute(UUID.randomUUID(), command);
             return ResponseEntity.ok().build();
         }
     }
