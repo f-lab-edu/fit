@@ -1,7 +1,6 @@
 package fit;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,5 +17,6 @@ public class MemberEntity {
 
     @Id
     private UUID id;
+    @Column(unique = true)
     private String email;
 }

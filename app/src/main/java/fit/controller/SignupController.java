@@ -1,6 +1,5 @@
 package fit.controller;
 
-import fit.DuplicateEmailException;
 import fit.SignupCommandExecutor;
 import fit.command.Signup;
 import org.springframework.http.ResponseEntity;
