@@ -1,7 +1,6 @@
 package fit;
 
-import fit.command.Signup;
-import java.util.UUID;
+import fit.command.SignupWithPasswordHash;
 
 public class SignupCommandExecutor {
 
@@ -11,7 +10,10 @@ public class SignupCommandExecutor {
         this.repository = repository;
     }
 
-    public void execute(UUID id, Signup command) {
-        repository.createMember(new Member(id, command.email()));
+    public void execute(SignupWithPasswordHash signupWithPasswordHash) {
+        repository.createMember(new Member(
+                signupWithPasswordHash.uuid(),
+                signupWithPasswordHash.email(),
+                signupWithPasswordHash.hashingPassword()));
     }
 }

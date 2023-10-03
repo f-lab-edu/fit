@@ -19,4 +19,6 @@ public class MemberEntity {
     private UUID id;
     @Column(unique = true)
     private String email;
+    @Column
+    private String hashingPassword;
 }
