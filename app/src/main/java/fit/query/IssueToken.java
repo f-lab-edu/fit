@@ -1,5 +1,12 @@
 package fit.query;
 
-public record IssueToken(String email, String password){
+import jakarta.validation.constraints.NotNull;
+
+public record IssueToken(
+        @NotNull
+        String email,
+        @NotNull
+        String password
+){
 
 }
