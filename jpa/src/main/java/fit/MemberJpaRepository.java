@@ -10,13 +10,13 @@ public interface MemberJpaRepository extends MemberRepository, JpaRepository<Mem
 
     @Override
     default void createMember(Member member) {
-        saveAndFlush(new MemberEntity(member.id(), member.email(), member.hashingPassword()));
+        saveAndFlush(new MemberEntity(member.id(), member.email(), member.passwordHash()));
     }
 
     @Override
     default Optional<Member> findMemberByEmail(String email) {
         return findByEmail(email)
-                    .map(x -> new Member(x.getId(), x.getEmail(), x.getHashingPassword()));
+                    .map(x -> new Member(x.getId(), x.getEmail(), x.getPasswordHash()));
     }
 
     Optional<MemberEntity> findByEmail(String email);

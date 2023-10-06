@@ -27,7 +27,7 @@ public class IssueTokenController {
     public ResponseEntity<HashMap<String, Object>> issueToken(@RequestBody IssueToken query) {
         Optional<Member> member = repository.findMemberByEmail(query.email());
 
-        if (member.isPresent() && passwordEncoder.matches(query.password(), member.map(Member::hashingPassword).orElse(""))) {
+        if (member.map(x -> passwordEncoder.matches(query.password(), x.passwordHash())).orElse(false)) {
             HashMap<String, Object> body = new HashMap<>();
             body.put("token", "");
             return ResponseEntity.ok(body);

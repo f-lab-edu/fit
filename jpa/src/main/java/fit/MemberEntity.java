@@ -20,5 +20,5 @@ public class MemberEntity {
     @Column(unique = true)
     private String email;
     @Column
-    private String hashingPassword;
+    private String passwordHash;
 }

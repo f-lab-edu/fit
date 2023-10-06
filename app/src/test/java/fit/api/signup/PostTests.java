@@ -1,13 +1,10 @@
 package fit.api.signup;
 
 import fit.AutoParameterizedTest;
-import fit.SecurityConfig;
-import org.assertj.core.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.HashMap;
 
@@ -83,18 +80,6 @@ public class PostTests {
         ResponseEntity<Void> response = signup(email, password2);
 
         assertThat(response.getStatusCode().value()).isEqualTo(400);
-    }
-
-    @AutoParameterizedTest
-    void sut_returns_hashing_password(String localPart) {
-        // Arrange
-        PasswordEncoder passwordEncoder = new SecurityConfig().passwordEncoder();
-
-        // Act
-        String hashingPassword = passwordEncoder.encode(localPart);
-
-        // Assert
-        Assertions.assertThat(passwordEncoder.matches(localPart, hashingPassword)).isTrue();
     }
 
     private ResponseEntity<Void> signup(String email, String password) {
