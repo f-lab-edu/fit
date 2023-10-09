@@ -82,6 +82,44 @@ public class PostTests {
         assertThat(response.getStatusCode().value()).isEqualTo(400);
     }
 
+    @AutoParameterizedTest
+    void sut_returns_400_status_code_if_not_email_type(String localPart, String password) {
+        String email = localPart;
+
+        ResponseEntity<Void> response = signup(email, password);
+
+        assertThat(response.getStatusCode().value()).isEqualTo(400);
+    }
+
+    @AutoParameterizedTest
+    void sut_returns_400_status_code_if_email_over_100_size(String localPart, String password) {
+        String email = localPart.repeat(10).substring(0,100) + "@fit.com";
+
+        ResponseEntity<Void> response = signup(email, password);
+
+        assertThat(response.getStatusCode().value()).isEqualTo(400);
+    }
+
+    @AutoParameterizedTest
+    void sut_returns_400_status_code_if_password_min_10_size(String localPart, String localPart2) {
+        String email = localPart + "@fit.com";
+        String password = localPart2.substring(0, 5);
+
+        ResponseEntity<Void> response = signup(email, password);
+
+        assertThat(response.getStatusCode().value()).isEqualTo(400);
+    }
+
+    @AutoParameterizedTest
+    void sut_returns_400_status_code_if_password_over_50_size(String localPart, String localPart2) {
+        String email = localPart + "@fit.com";
+        String password = localPart2.repeat(2).substring(0, 55);
+
+        ResponseEntity<Void> response = signup(email, password);
+
+        assertThat(response.getStatusCode().value()).isEqualTo(400);
+    }
+
     private ResponseEntity<Void> signup(String email, String password) {
         HashMap<String, String> command1 = new HashMap<>();
         command1.put("email", email);

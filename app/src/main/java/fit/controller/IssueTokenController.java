@@ -3,6 +3,7 @@ package fit.controller;
 import fit.Member;
 import fit.MemberRepository;
 import fit.query.IssueToken;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +25,7 @@ public class IssueTokenController {
     }
 
     @PostMapping("/api/issue-token")
-    public ResponseEntity<HashMap<String, Object>> issueToken(@RequestBody IssueToken query) {
+    public ResponseEntity<HashMap<String, Object>> issueToken(@Valid @RequestBody IssueToken query) {
         Optional<Member> member = repository.findMemberByEmail(query.email());
 
         if (member.map(x -> passwordEncoder.matches(query.password(), x.passwordHash())).orElse(false)) {

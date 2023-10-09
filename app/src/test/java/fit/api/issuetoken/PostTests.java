@@ -45,6 +45,44 @@ public class PostTests {
     }
 
     @AutoParameterizedTest
+    void sut_returns_400_status_code_if_email_missed(String localPart, String password) {
+        // Arrange
+        String email = localPart + "@fit.com";
+        signup(email, password);
+
+        HashMap<String, String> issueToken = new HashMap<>();
+        issueToken.put("password", password);
+
+        // Act
+        ResponseEntity<Void> response = client.postForEntity(
+                "/api/issue-token",
+                issueToken,
+                void.class);
+
+        // Assert
+        assertThat(response.getStatusCode().value()).isEqualTo(400);
+    }
+
+    @AutoParameterizedTest
+    void sut_returns_400_status_code_if_password_missed(String localPart, String password) {
+        // Arrange
+        String email = localPart + "@fit.com";
+        signup(email, password);
+
+        HashMap<String, String> issueToken = new HashMap<>();
+        issueToken.put("email", email);
+
+        // Act
+        ResponseEntity<Void> response = client.postForEntity(
+                "/api/issue-token",
+                issueToken,
+                void.class);
+
+        // Assert
+        assertThat(response.getStatusCode().value()).isEqualTo(400);
+    }
+
+    @AutoParameterizedTest
     void sut_returns_token(String localPart, String password) {
         // Arrange
         String email = localPart + "@fit.com";
