@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.HashMap;
 
+import static fit.api.ApiTestLanguage.signup;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -27,10 +28,7 @@ public class PostTests {
         command.put("password", password);
 
         // Act
-        ResponseEntity<Void> response = client.postForEntity(
-                "/api/signup",
-                command,
-                void.class);
+        ResponseEntity<Void> response = signup(client, command);
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(200);
@@ -43,10 +41,7 @@ public class PostTests {
         command.put("password", password);
 
         // Act
-        ResponseEntity<Void> response = client.postForEntity(
-                "/api/signup",
-                command,
-                void.class);
+        ResponseEntity<Void> response = signup(client, command);
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(400);
@@ -59,10 +54,7 @@ public class PostTests {
         command.put("email", localPart + "@fit.com");
 
         // Act
-        ResponseEntity<Void> response = client.postForEntity(
-                "/api/signup",
-                command,
-                void.class);
+        ResponseEntity<Void> response = signup(client, command);
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(400);
@@ -74,18 +66,15 @@ public class PostTests {
             String password1,
             String password2
     ) {
+        // Arrange
         String email = localPart + "@fit.com";
-        signup(email, password1);
+        signup(client, email, password1);
 
-        ResponseEntity<Void> response = signup(email, password2);
+        // Act
+        ResponseEntity<Void> response = signup(client, email, password2);
 
+        // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(400);
     }
 
-    private ResponseEntity<Void> signup(String email, String password) {
-        HashMap<String, String> command1 = new HashMap<>();
-        command1.put("email", email);
-        command1.put("password", password);
-        return client.postForEntity("/api/signup", command1, void.class);
-    }
 }
