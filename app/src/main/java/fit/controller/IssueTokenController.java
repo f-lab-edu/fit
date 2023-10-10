@@ -1,5 +1,6 @@
 package fit.controller;
 
+import fit.JwtConfig;
 import fit.Member;
 import fit.MemberRepository;
 import fit.query.IssueToken;
@@ -17,10 +18,14 @@ public class IssueTokenController {
 
     private final MemberRepository repository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtConfig jwtConfig;
 
-    public IssueTokenController(MemberRepository repository, PasswordEncoder passwordEncoder) {
+    public IssueTokenController(MemberRepository repository,
+                                PasswordEncoder passwordEncoder,
+                                JwtConfig jwtConfig) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtConfig = jwtConfig;
     }
 
     @PostMapping("/api/issue-token")
@@ -29,7 +34,7 @@ public class IssueTokenController {
 
         if (member.map(x -> passwordEncoder.matches(query.password(), x.passwordHash())).orElse(false)) {
             HashMap<String, Object> body = new HashMap<>();
-            body.put("token", "");
+            body.put("token", jwtConfig.createToken(query.email()));
             return ResponseEntity.ok(body);
         } else {
             return ResponseEntity.badRequest().build();

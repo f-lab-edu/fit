@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import java.net.URI;
 import java.util.HashMap;
 
+import static fit.api.ApiTestLanguage.signup;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -28,7 +29,7 @@ public class PostTests {
         // Arrange
         String email = localPart + "@fit.com";
 
-        signup(email, password);
+        signup(client, email, password);
 
         HashMap<String, String> issueToken = new HashMap<>();
         issueToken.put("email", email);
@@ -48,7 +49,7 @@ public class PostTests {
     void sut_returns_token(String localPart, String password) {
         // Arrange
         String email = localPart + "@fit.com";
-        signup(email, password);
+        signup(client, email, password);
 
         // Act
         ResponseEntity<HashMap<String, Object>> response = issueToken(email, password);
@@ -62,13 +63,10 @@ public class PostTests {
 
     @AutoParameterizedTest
     void sut_returns_400_status_code_no_exist_member(String localPart, String password) {
-        // Arrange
         String email = localPart + "@fit.com";
 
-        // Act
         ResponseEntity<?> response = issueToken(email, password);
 
-        // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(400);
     }
 
@@ -76,20 +74,13 @@ public class PostTests {
     void sut_returns_400_status_code_wrong_password(String localPart, String password, String wrongPassword) {
         // Arrange
         String email = localPart + "@fit.com";
-        signup(email, password);
+        signup(client, email, password);
 
         // Act
         ResponseEntity<?> response = issueToken(email, wrongPassword);
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(400);
-    }
-
-    private void signup(String email, String password) {
-        HashMap<String, String> command = new HashMap<>();
-        command.put("email", email);
-        command.put("password", password);
-        client.postForEntity("/api/signup", command, void.class);
     }
 
     private static RequestEntity<HashMap<String, String>> createIssueTokenRequest(String email, String password) {
