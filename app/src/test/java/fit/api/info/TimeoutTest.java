@@ -33,7 +33,7 @@ public class TimeoutTest {
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
-        HttpEntity request = new HttpEntity(headers);
+        HttpEntity<String> request = new HttpEntity<>(headers);
 
         Thread.sleep(1000);
 
@@ -70,6 +70,6 @@ public class TimeoutTest {
                 request,
                 new ParameterizedTypeReference<>() {});
         HashMap<String, Object> body = res.getBody();
-        return body.get("token").toString();
+        return body != null ? body.get("token").toString() : "";
     }
 }

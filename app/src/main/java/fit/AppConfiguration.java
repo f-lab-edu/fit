@@ -1,5 +1,7 @@
 package fit;
 
+import fit.executor.DeleteAccountExecutor;
+import fit.executor.SignupCommandExecutor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,8 +15,13 @@ public class AppConfiguration {
     }
 
     @Bean
-    public JwtAuthorizationFilter jwtAuthorizationFilter(JwtConfig jwtConfig) {
-        return new JwtAuthorizationFilter(jwtConfig);
+    public DeleteAccountExecutor deleteAccountExecutor(MemberRepository memberRepository) {
+        return new DeleteAccountExecutor(memberRepository);
+    }
+
+    @Bean
+    public JwtAuthorizationFilter jwtAuthorizationFilter(MemberRepository memberRepository, JwtConfig jwtConfig) {
+        return new JwtAuthorizationFilter(memberRepository, jwtConfig);
     }
 
     @Bean

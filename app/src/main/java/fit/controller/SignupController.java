@@ -1,6 +1,6 @@
 package fit.controller;
 
-import fit.SignupCommandExecutor;
+import fit.executor.SignupCommandExecutor;
 import fit.command.Signup;
 import fit.command.SignupWithPasswordHash;
 import org.springframework.http.ResponseEntity;

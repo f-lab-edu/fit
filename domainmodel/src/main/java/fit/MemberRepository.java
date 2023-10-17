@@ -7,4 +7,6 @@ public interface MemberRepository {
     void createMember(Member member);
 
     Optional<Member> findMemberByEmail(String email);
+
+    void deleteMemberByEmail(String email);
 }

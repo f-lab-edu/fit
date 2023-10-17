@@ -11,12 +11,15 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
+    private final MemberRepository repository;
     private final JwtConfig jwtConfig;
 
-    public JwtAuthorizationFilter(JwtConfig jwtConfig) {
+    public JwtAuthorizationFilter(MemberRepository repository, JwtConfig jwtConfig) {
+        this.repository = repository;
         this.jwtConfig = jwtConfig;
     }
 
@@ -43,6 +46,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         // 이메일 추출
         String email = jwtConfig.getEmail(token);
+
+        // 이메일 체크
+        Optional<Member> member = repository.findMemberByEmail(email);
+        if (member.isEmpty()) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         // 권한 부여
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email,

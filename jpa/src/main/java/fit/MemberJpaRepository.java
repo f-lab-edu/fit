@@ -19,5 +19,11 @@ public interface MemberJpaRepository extends MemberRepository, JpaRepository<Mem
                     .map(x -> new Member(x.getId(), x.getEmail(), x.getPasswordHash()));
     }
 
+    @Override
+    default void deleteMemberByEmail(String email) {
+        findByEmail(email).ifPresent(this::delete);
+    }
+
+
     Optional<MemberEntity> findByEmail(String email);
 }

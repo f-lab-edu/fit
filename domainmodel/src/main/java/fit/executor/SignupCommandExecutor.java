@@ -1,5 +1,7 @@
-package fit;
+package fit.executor;
 
+import fit.Member;
+import fit.MemberRepository;
 import fit.command.SignupWithPasswordHash;
 
 public class SignupCommandExecutor {
