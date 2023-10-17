@@ -24,13 +24,14 @@ public class SignupController {
 
     @PostMapping("/api/signup")
     public ResponseEntity<Void> signup(@RequestBody Signup command) {
-        if (command.email() == null || command.password() == null) {
+        if (command.email() == null || command.password() == null || command.nickname() == null) {
             return ResponseEntity.badRequest().build();
         } else {
             SignupWithPasswordHash signupWithPasswordHash = new SignupWithPasswordHash(
                     UUID.randomUUID(),
                     command.email(),
-                    passwordEncoder.encode(command.password()));
+                    passwordEncoder.encode(command.password()),
+                    command.nickname());
             executor.execute(signupWithPasswordHash);
             return ResponseEntity.ok().build();
         }

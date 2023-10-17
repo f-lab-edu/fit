@@ -2,4 +2,4 @@ package fit;
 
 import java.util.UUID;
 
-public record Member(UUID id, String email, String passwordHash) { }
+public record Member(UUID id, String email, String passwordHash, String nickname) { }

@@ -1,4 +1,4 @@
-package fit.api.deleteaccount;
+package fit.api.remove;
 
 import fit.AutoParameterizedTest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,60 +22,63 @@ public class DeleteTests {
     }
 
     @AutoParameterizedTest
-    void sut_returns_200_status_code(String localPart, String password) {
+    void sut_returns_200_status_code(String localPart, String password, String nickname) {
         // Arrange
         String email = localPart + "@fit.com";
-        signup(email, password);
+        signup(email, password, nickname);
 
         String token = getIssueToken(email, password);
 
         // Act
-        ResponseEntity<Void> response = deleteAccount(email, token);
+        ResponseEntity<Void> response = remove(email, token);
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(200);
     }
 
     @AutoParameterizedTest
-    void sut_returns_403_status_code_if_email_missed(String localPart, String password) {
+    void sut_returns_403_status_code_if_email_missed(String localPart, String password, String nickname) {
         // Arrange
         String email = localPart + "@fit.com";
-        signup(email, password);
+        signup(email, password, nickname);
 
         String token = getIssueToken(email, password);
 
         // Act
-        ResponseEntity<Void> response = deleteAccount("", token);
+        ResponseEntity<Void> response = remove("", token);
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(403);
     }
 
     @AutoParameterizedTest
-    void sut_returns_400_status_code_email_not_match(String localPart, String localPart2, String password) {
+    void sut_returns_400_status_code_email_not_match(String localPart,
+                                                     String localPart2,
+                                                     String password,
+                                                     String nickname) {
         // Arrange
         String email = localPart + "@fit.com";
         String wrong_email = localPart2 + "@fit.com";
-        signup(email, password);
+        signup(email, password, nickname);
 
         String token = getIssueToken(email, password);
 
         // Act
-        ResponseEntity<Void> response = deleteAccount(wrong_email, token);
+        ResponseEntity<Void> response = remove(wrong_email, token);
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(400);
     }
 
     @AutoParameterizedTest
-    void sut_returns_403_status_code_after_delete_account_same_token_info(String localPart, String password) {
+    void sut_returns_403_status_code_after_delete_account_same_token_info(String localPart, String password, String nickname) {
         // Arrange
         String email = localPart + "@fit.com";
-        signup(email, password);
+        signup(email, password, nickname);
 
         String token = getIssueToken(email, password);
 
-        deleteAccount(email, token);
+        remove(email, token);
 
         // Act
         ResponseEntity<HashMap<String, Object>> response = info(token);
@@ -85,14 +88,14 @@ public class DeleteTests {
     }
 
     @AutoParameterizedTest
-    void sut_returns_400_status_code_after_delete_account_issue_token(String localPart, String password) {
+    void sut_returns_400_status_code_after_delete_account_issue_token(String localPart, String password, String nickname) {
         // Arrange
         String email = localPart + "@fit.com";
-        signup(email, password);
+        signup(email, password, nickname);
 
         String token = getIssueToken(email, password);
 
-        deleteAccount(email, token);
+        remove(email, token);
 
         // Act
         ResponseEntity<HashMap<String, Object>> response = issueToken(email, password);
@@ -101,22 +104,23 @@ public class DeleteTests {
         assertThat(response.getStatusCode().value()).isEqualTo(400);
     }
 
-    private ResponseEntity<Void> deleteAccount(String paramEmail, String token) {
+    private ResponseEntity<Void> remove(String paramEmail, String token) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
         HttpEntity<String> request = new HttpEntity<>(headers);
 
         return client.exchange(
-                "/api/delete-account/" + paramEmail,
+                "/api/remove/" + paramEmail,
                 HttpMethod.DELETE,
                 request,
                 void.class);
     }
 
-    private void signup(String email, String password) {
+    private void signup(String email, String password, String nickname) {
         HashMap<String, String> command = new HashMap<>();
         command.put("email", email);
         command.put("password", password);
+        command.put("nickname", nickname);
         client.postForEntity("/api/signup", command, void.class);
     }
 

@@ -22,10 +22,10 @@ public class GetTests {
     }
 
     @AutoParameterizedTest
-    void sut_returns_200_status_code(String localPart, String password) {
+    void sut_returns_200_status_code(String localPart, String password, String nickname) {
         // Arrange
         String email = localPart + "@fit.com";
-        signup(email, password);
+        signup(email, password, nickname);
         String token = issueToken(email, password);
 
         // Act
@@ -36,19 +36,22 @@ public class GetTests {
     }
 
     @AutoParameterizedTest
-    void sut_returns_email(String localPart, String password) {
+    void sut_returns_email(String localPart, String password, String nickname) {
         // Arrange
         String email = localPart + "@fit.com";
-        signup(email, password);
+        signup(email, password, nickname);
         String token = issueToken(email, password);
 
+        // Act
         ResponseEntity<HashMap<String, Object>> response = info(token);
 
         // Assert
         HashMap<String, Object> body = response.getBody();
         assertThat(body).isNotNull();
         assertThat(body).containsKey("email");
+        assertThat(body).containsKey("nickname");
         assertThat(body.get("email")).isInstanceOf(String.class);
+        assertThat(body.get("nickname")).isInstanceOf(String.class);
     }
 
     @AutoParameterizedTest
@@ -65,10 +68,11 @@ public class GetTests {
         assertThat(response.getStatusCode().value()).isEqualTo(403);
     }
 
-    private void signup(String email, String password) {
+    private void signup(String email, String password, String nickname) {
         HashMap<String, String> command = new HashMap<>();
         command.put("email", email);
         command.put("password", password);
+        command.put("nickname", nickname);
         client.postForEntity("/api/signup", command, void.class);
     }
 

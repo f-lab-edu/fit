@@ -24,11 +24,11 @@ public class PostTests {
     }
 
     @AutoParameterizedTest
-    void sut_returns_200_status_code(String localPart, String password) {
+    void sut_returns_200_status_code(String localPart, String password, String nickname) {
         // Arrange
         String email = localPart + "@fit.com";
 
-        signup(email, password);
+        signup(email, password, nickname);
 
         HashMap<String, String> issueToken = new HashMap<>();
         issueToken.put("email", email);
@@ -45,10 +45,10 @@ public class PostTests {
     }
 
     @AutoParameterizedTest
-    void sut_returns_token(String localPart, String password) {
+    void sut_returns_token(String localPart, String password, String nickname) {
         // Arrange
         String email = localPart + "@fit.com";
-        signup(email, password);
+        signup(email, password, nickname);
 
         // Act
         ResponseEntity<HashMap<String, Object>> response = issueToken(email, password);
@@ -73,10 +73,13 @@ public class PostTests {
     }
 
     @AutoParameterizedTest
-    void sut_returns_400_status_code_wrong_password(String localPart, String password, String wrongPassword) {
+    void sut_returns_400_status_code_wrong_password(String localPart,
+                                                    String password,
+                                                    String wrongPassword,
+                                                    String nickname) {
         // Arrange
         String email = localPart + "@fit.com";
-        signup(email, password);
+        signup(email, password, nickname);
 
         // Act
         ResponseEntity<?> response = issueToken(email, wrongPassword);
@@ -85,10 +88,11 @@ public class PostTests {
         assertThat(response.getStatusCode().value()).isEqualTo(400);
     }
 
-    private void signup(String email, String password) {
+    private void signup(String email, String password, String nickname) {
         HashMap<String, String> command = new HashMap<>();
         command.put("email", email);
         command.put("password", password);
+        command.put("nickname", nickname);
         client.postForEntity("/api/signup", command, void.class);
     }
 
@@ -106,7 +110,6 @@ public class PostTests {
         RequestEntity<HashMap<String, String>> request = createIssueTokenRequest(email, password);
         return client.exchange(
                 request,
-                new ParameterizedTypeReference<>() {
-                });
+                new ParameterizedTypeReference<>() {});
     }
 }

@@ -2,10 +2,10 @@ package fit.executor;
 
 import fit.MemberRepository;
 
-public class DeleteAccountExecutor {
+public class RemoveCommandExecutor {
     private final MemberRepository repository;
 
-    public DeleteAccountExecutor(MemberRepository repository) {
+    public RemoveCommandExecutor(MemberRepository repository) {
         this.repository = repository;
     }
 

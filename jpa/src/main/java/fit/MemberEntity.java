@@ -21,4 +21,6 @@ public class MemberEntity {
     private String email;
     @Column
     private String passwordHash;
+    @Column
+    private String nickname;
 }

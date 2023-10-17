@@ -8,5 +8,7 @@ public interface MemberRepository {
 
     Optional<Member> findMemberByEmail(String email);
 
+    void updateMember(Member member);
+
     void deleteMemberByEmail(String email);
 }

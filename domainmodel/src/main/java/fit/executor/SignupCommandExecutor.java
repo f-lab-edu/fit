@@ -16,6 +16,7 @@ public class SignupCommandExecutor {
         repository.createMember(new Member(
                 signupWithPasswordHash.uuid(),
                 signupWithPasswordHash.email(),
-                signupWithPasswordHash.passwordHash()));
+                signupWithPasswordHash.passwordHash(),
+                signupWithPasswordHash.nickname()));
     }
 }

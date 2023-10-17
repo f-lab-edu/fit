@@ -16,9 +16,10 @@ public class JwtConfig {
         this.jwtExpiryTime = jwtExpiryTime;
     }
 
-    public String createToken(String email) {
+    public String createToken(String email, String nickname) {
         Claims claims = Jwts.claims();
         claims.put("email", email);
+        claims.put("nickname", nickname);
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -30,6 +31,10 @@ public class JwtConfig {
 
     public String getEmail(String token) {
         return jwtGetBody(token).get("email", String.class);
+    }
+
+    public String getNickname(String token) {
+        return jwtGetBody(token).get("nickname", String.class);
     }
 
     public boolean isExpired(String token) {

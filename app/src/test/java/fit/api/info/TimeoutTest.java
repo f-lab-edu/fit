@@ -25,10 +25,12 @@ public class TimeoutTest {
     }
 
     @AutoParameterizedTest
-    void sut_returns_403_status_code_token_timeout(String localPart, String password) throws InterruptedException {
+    void sut_returns_403_status_code_token_timeout(String localPart,
+                                                   String password,
+                                                   String nickname) throws InterruptedException {
         // Arrange
         String email = localPart + "@fit.com";
-        signup(email, password);
+        signup(email, password, nickname);
         String token = issueToken(email, password);
 
         HttpHeaders headers = new HttpHeaders();
@@ -49,10 +51,11 @@ public class TimeoutTest {
         assertThat(response.getStatusCode().value()).isEqualTo(403);
     }
 
-    private void signup(String email, String password) {
+    private void signup(String email, String password, String nickname) {
         HashMap<String, String> command = new HashMap<>();
         command.put("email", email);
         command.put("password", password);
+        command.put("nickname", nickname);
         client.postForEntity("/api/signup", command, void.class);
     }
 

@@ -24,6 +24,7 @@ public class InfoController {
 
         HashMap<String, Object> body = new HashMap<>();
         body.put("email", jwtConfig.getEmail(token));
+        body.put("nickname", jwtConfig.getNickname(token));
         return ResponseEntity.ok(body);
     }
 }
