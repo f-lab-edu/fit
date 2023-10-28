@@ -1,9 +1,8 @@
 package fit.controller;
 
-import fit.JwtConfig;
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.HttpHeaders;
+import fit.MemberView;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,18 +11,12 @@ import java.util.HashMap;
 @RestController
 public class InfoController {
 
-    private final JwtConfig jwtConfig;
-
-    public InfoController(JwtConfig jwtConfig) {
-        this.jwtConfig = jwtConfig;
-    }
-
     @GetMapping("/api/info")
-    public ResponseEntity<HashMap<String, Object>> info(HttpServletRequest request) {
-        String token = request.getHeader(HttpHeaders.AUTHORIZATION).split(" ")[1];
+    public ResponseEntity<HashMap<String, Object>> info(Authentication authentication) {
+        MemberView memberView = (MemberView) authentication.getPrincipal();
 
         HashMap<String, Object> body = new HashMap<>();
-        body.put("email", jwtConfig.getEmail(token));
+        body.put("email", memberView.email());
         return ResponseEntity.ok(body);
     }
 }

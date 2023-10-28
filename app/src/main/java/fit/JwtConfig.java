@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 import java.util.Date;
+import java.util.UUID;
 
 public class JwtConfig {
 
@@ -16,20 +17,24 @@ public class JwtConfig {
         this.jwtExpiryTime = jwtExpiryTime;
     }
 
-    public String createToken(String email) {
+    public String createToken(UUID id, String email) {
         Claims claims = Jwts.claims();
         claims.put("email", email);
 
         return Jwts.builder()
                 .setClaims(claims)
+                .setSubject(id.toString())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpiryTime))
                 .signWith(SignatureAlgorithm.HS256, jwtSecretKey)
                 .compact();
     }
 
-    public String getEmail(String token) {
-        return jwtGetBody(token).get("email", String.class);
+    public MemberView getMemberView(String token) {
+        return new MemberView(
+            UUID.fromString(jwtGetBody(token).getSubject()),
+            jwtGetBody(token).get("email", String.class)
+        );
     }
 
     public boolean isExpired(String token) {

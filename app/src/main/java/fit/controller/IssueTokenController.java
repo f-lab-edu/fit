@@ -34,7 +34,7 @@ public class IssueTokenController {
 
         if (member.map(x -> passwordEncoder.matches(query.password(), x.passwordHash())).orElse(false)) {
             HashMap<String, Object> body = new HashMap<>();
-            body.put("token", jwtConfig.createToken(query.email()));
+            body.put("token", jwtConfig.createToken(member.get().id(), member.get().email()));
             return ResponseEntity.ok(body);
         } else {
             return ResponseEntity.badRequest().build();

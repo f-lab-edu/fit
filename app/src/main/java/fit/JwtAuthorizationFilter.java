@@ -31,7 +31,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         final String authentication = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        // token 여부
         if (authentication == null || !authentication.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
@@ -44,17 +43,16 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String email = jwtConfig.getEmail(token);
-        authenticate(request, response, filterChain, email);
+        MemberView memberView = jwtConfig.getMemberView(token);
+        authenticate(request, memberView);
+
+        filterChain.doFilter(request, response);
     }
 
-    private static void authenticate(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, String email) throws IOException, ServletException {
-        var authenticationToken = new UsernamePasswordAuthenticationToken(email,
-                null,
-                null);
+    private static void authenticate(HttpServletRequest request, MemberView memberView) {
+        var authenticationToken = new UsernamePasswordAuthenticationToken(memberView, null, null);
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-        filterChain.doFilter(request, response);
     }
 
     private static String extractToken(String authentication) {
