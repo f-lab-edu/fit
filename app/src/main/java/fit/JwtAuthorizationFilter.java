@@ -45,16 +45,15 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         }
 
         String email = jwtConfig.getEmail(token);
-        authenticate(request, response, filterChain, email);
+        authenticate(request, email);
+
+        filterChain.doFilter(request, response);
     }
 
-    private static void authenticate(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, String email) throws IOException, ServletException {
-        var authenticationToken = new UsernamePasswordAuthenticationToken(email,
-                null,
-                null);
+    private static void authenticate(HttpServletRequest request, String email) {
+        var authenticationToken = new UsernamePasswordAuthenticationToken(email, null, null);
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-        filterChain.doFilter(request, response);
     }
 
     private static String extractToken(String authentication) {
