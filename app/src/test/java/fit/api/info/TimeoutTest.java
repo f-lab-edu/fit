@@ -31,7 +31,7 @@ public class TimeoutTest {
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
-        HttpEntity request = new HttpEntity(headers);
+        HttpEntity<String> request = new HttpEntity<>(headers);
 
         Thread.sleep(1000);
 
