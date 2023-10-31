@@ -3,6 +3,7 @@ package fit;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -21,6 +22,11 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<Void> handleUsernameNotFoundException() {
+        return ResponseEntity.badRequest().build();
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Void> handleMethodArgumentNotValidException() {
         return ResponseEntity.badRequest().build();
     }
 }
